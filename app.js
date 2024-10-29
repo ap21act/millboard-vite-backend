@@ -28,10 +28,11 @@ app.use(cors({
 app.use((req, res, next) => {
     res.setHeader(
         "Content-Security-Policy",
-        "default-src 'self'; script-src 'self' blob:; style-src 'self' 'unsafe-inline';"
+        "default-src 'self'; script-src 'self' blob:; style-src 'self' 'unsafe-inline'; connect-src 'self' https://www.google-analytics.com;"
     );
     next();
 });
+
 
 // Body parsing middleware
 app.use(express.json({ limit: '16mb' }));
