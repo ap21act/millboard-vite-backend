@@ -5,6 +5,8 @@ const connectDB = async () => {
     try {
         // Remove the deprecated options
         await mongoose.connect(`${process.env.MONGODB_URI}/${DB_NAME}`, {
+            serverSelectionTimeoutMS: 30000, // Increase server selection timeout
+            socketTimeoutMS: 45000, // Increase socket timeout
 
         });
         console.log('MongoDb connection successful');

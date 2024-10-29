@@ -6,7 +6,7 @@ import {  ApiResponse, ApiError, asyncHandler } from '../utils/index.js';
 export const getAllProducts = asyncHandler(async (req, res, next) => {
     try {
       // Fetch all products from the database
-      const products = await Product.find().lean();
+      const products = await Product.find().limit(50).lean();
   
       if (!products.length) {
         console.warn('No products found in the database.');
