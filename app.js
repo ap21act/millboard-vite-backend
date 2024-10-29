@@ -2,8 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import productRoutes from './Routes/product.route.js';
-import emailRoutes from './Routes/email.route.js';
+import productRoutes from './routes/product.route.js';
+import emailRoutes from './routes/email.route.js';
 
 dotenv.config();
 
