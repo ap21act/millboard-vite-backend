@@ -2,25 +2,26 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose'; // Required to access the MongoDB connection
+import mongoose from 'mongoose'; // Import Mongoose for MongoDB connection
 
 dotenv.config();
 
 const app = express();
 
-// Define allowed origins
-const allowedOrigins = [process.env.CORS_ORIGIN, 'https://www.thelivingoutdoors.com']; // Add any other allowed origins here
+// Define allowed origins for CORS
+const allowedOrigins = [process.env.CORS_ORIGIN, 'https://www.thelivingoutdoors.com'];
 
-// Configure CORS to allow multiple origins
+// Configure CORS middleware
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin, like mobile apps or curl requests
+        // Allow requests with no origin, such as mobile apps or curl requests
         if (!origin) return callback(null, true);
-        if (allowedOrigins.indexOf(origin) === -1) {
+        if (allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
             const msg = 'The CORS policy for this site does not allow access from the specified origin.';
-            return callback(new Error(msg), false);
+            callback(new Error(msg), false);
         }
-        return callback(null, true);
     },
     credentials: true
 }));
@@ -40,7 +41,7 @@ app.use(express.urlencoded({ extended: true, limit: '16mb' }));
 app.use(express.static('public'));
 app.use(cookieParser());
 
-// Routes
+// Import routes
 import productRoutes from './routes/product.route.js';
 import emailRoutes from './routes/email.route.js';
 
@@ -55,21 +56,24 @@ app.get('/api/v1/test-db', async (req, res) => {
     }
 
     try {
-        await mongoose.connection.db.admin().ping(); // `admin().ping()` is more reliable
-        res.status(200).send('Database connected successfully');
+        const dbStatus = await mongoose.connection.db.admin().ping();
+        if (dbStatus.ok) {
+            res.status(200).send('Database connected successfully');
+        } else {
+            throw new Error("Ping failed");
+        }
     } catch (error) {
         console.error("Database connection error:", error);
         res.status(500).send(`Database connection failed: ${error.message}`);
     }
 });
 
-
 // Root endpoint
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-// Error handling middleware for CORS and other errors
+// Error handling middleware
 app.use((err, req, res, next) => {
     console.error(err.message);
     if (err instanceof Error && err.message.includes("CORS")) {
