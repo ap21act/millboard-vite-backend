@@ -49,14 +49,20 @@ app.use('/api/v1/email', emailRoutes);
 
 // Test database connection route
 app.get('/api/v1/test-db', async (req, res) => {
+    if (mongoose.connection.readyState !== 1) { // 1 means connected
+        console.error("Database connection not established.");
+        return res.status(500).send("Database connection not established.");
+    }
+
     try {
-        await mongoose.connection.db.command({ ping: 1 });
+        await mongoose.connection.db.admin().ping(); // `admin().ping()` is more reliable
         res.status(200).send('Database connected successfully');
     } catch (error) {
         console.error("Database connection error:", error);
         res.status(500).send(`Database connection failed: ${error.message}`);
     }
 });
+
 
 // Root endpoint
 app.get('/', (req, res) => {
