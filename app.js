@@ -9,12 +9,13 @@ dotenv.config();
 const app = express();
 
 // Define allowed origins for CORS
-const allowedOrigins = [process.env.CORS_ORIGIN, 'https://www.thelivingoutdoors.com'];
+const allowedOrigins = [process.env.CORS_ORIGIN, 'https://thelivingoutdoors.com', 'https://www.thelivingoutdoors.com'];
+
 
 // Configure CORS middleware
 app.use(cors({
     origin: (origin, callback) => {
-        // Allow requests with no origin, such as mobile apps or curl requests
+        // Allow requests with no origin, like mobile apps or curl requests
         if (!origin) return callback(null, true);
         if (allowedOrigins.includes(origin)) {
             callback(null, true);
@@ -25,6 +26,7 @@ app.use(cors({
     },
     credentials: true
 }));
+
 
 // Middleware for Content Security Policy (CSP)
 app.use((req, res, next) => {
