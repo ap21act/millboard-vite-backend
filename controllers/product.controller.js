@@ -7,7 +7,7 @@ export const getAllProducts = asyncHandler(async (req, res, next) => {
   try {
       console.log("Attempting to fetch products from database"); // Log action
       const products = await Product.find().lean();
-      console.log("Products fetched successfully", products); // Log result
+    //   console.log("Products fetched successfully", products); // Log result
       
       if (!products.length) {
           console.warn('No products found in the database.');
