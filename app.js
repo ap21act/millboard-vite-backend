@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import dotenv from 'dotenv';
+import mongoose from 'mongoose'; // Required to access the MongoDB connection
 
 dotenv.config();
 
@@ -33,7 +34,6 @@ app.use((req, res, next) => {
     next();
 });
 
-
 // Body parsing middleware
 app.use(express.json({ limit: '16mb' }));
 app.use(express.urlencoded({ extended: true, limit: '16mb' }));
@@ -47,6 +47,18 @@ import emailRoutes from './routes/email.route.js';
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/email', emailRoutes);
 
+// Test database connection route
+app.get('/api/v1/test-db', async (req, res) => {
+    try {
+        await mongoose.connection.db.command({ ping: 1 });
+        res.status(200).send('Database connected successfully');
+    } catch (error) {
+        console.error("Database connection error:", error);
+        res.status(500).send(`Database connection failed: ${error.message}`);
+    }
+});
+
+// Root endpoint
 app.get('/', (req, res) => {
     res.send('Hello World!');
 });
