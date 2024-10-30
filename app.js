@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 // Define allowed origins
-const allowedOrigins = [process.env.CORS_ORIGIN, 'http://localhost:5173']; // Add any other allowed origins here
+const allowedOrigins = [process.env.CORS_ORIGIN, 'https://www.thelivingoutdoors.com']; // Add any other allowed origins here
 
 // Configure CORS to allow multiple origins
 app.use(cors({
