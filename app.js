@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 // Define allowed origins for CORS
-const allowedOrigins = [process.env.CORS_ORIGIN, 'https://thelivingoutdoors.com', 'https://www.thelivingoutdoors.com'];
+const allowedOrigins = [process.env.CORS_ORIGIN, 'https://thelivingoutdoors.com', 'https://www.thelivingoutdoors.com', 'http://localhost:5173'];
 
 
 // Configure CORS middleware
