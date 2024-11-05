@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import {  getAllProducts } from '../controllers/product.controller.js';
+import {  getAllProducts,getProductById } from '../controllers/product.controller.js';
 
 
 const router = Router();
@@ -14,6 +14,9 @@ router.get('/', (req, res) => {
 });
 
 router.get('/getAllProducts', getAllProducts);
+
+// Route to fetch a single product by slug
+router.get('/getProductById/:id', getProductById);
 
 
 

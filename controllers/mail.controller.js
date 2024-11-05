@@ -28,16 +28,17 @@ export const sendEmailForCheckout = asyncHandler(async (req, res, next) => {
 
     
 
-    // Check if any required fields are missing
-    const missingFields = Object.entries(formData)
-      .filter(([_, value]) => !value || value.length === 0)
-      .map(([key]) => key);
+   // Check if required fields are missing, excluding optional fields
+   const requiredFields = { firstName, lastName, email, telephone, projectLocation, projectOwnerDetail, projectSize, projectStartTime };
+    
+   const missingFields = Object.entries(requiredFields)
+     .filter(([_, value]) => !value || value.length === 0)
+     .map(([key]) => key);
 
-    if (missingFields.length > 0) {
-      console.error('Missing required fields:', missingFields); // Log missing fields
-      return next(new ApiError(400, `The following fields are required from the request body of Checkout: ${missingFields.join(', ')}`));
-    }
-
+   if (missingFields.length > 0) {
+     console.error('Missing required fields:', missingFields); // Log missing fields
+     return next(new ApiError(400, `The following fields are required from the request body of Checkout: ${missingFields.join(', ')}`));
+   }
     // Construct address from selectedAddress
     const addressDetails = `
       <div style="margin: 10px 0;">
@@ -57,66 +58,66 @@ export const sendEmailForCheckout = asyncHandler(async (req, res, next) => {
       to: "bharat@kingsburygroup.co.uk",
       cc: "sushantbasnet2027@gmail.com",
       subject: "New Order via Living Outdoors - Dispatch Required",
-      html: `
-        <div style="font-family: 'F37 Ginger', Arial, sans-serif; background-color: #f7f8f9; padding: 20px;">
-          <style>
-            @font-face {
-              font-family: 'F37 Ginger';
-              src: url('https://res.cloudinary.com/ddtzxyzex/raw/upload/v1730800574/fonts/F37/F37-Ginger-Regular.ttf') format('truetype');
-              font-weight: normal;
-              font-style: normal;
-            }
-          </style>
-          <table style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 20px;">
-            <tr>
-              <td>
-                <!-- Logo and Header -->
-                <img src="cid:logo" alt="Living Outdoors" style="width: 300px; height: auto; margin-bottom: 20px;">
-                <h1 style="color: #414042; font-size: 24px; margin-bottom: 10px;">New Sample Order - Dispatch Required</h1>
-                <p style="margin: 0 0 15px;">Please find the details of the new sample order below. Ensure the items are dispatched promptly.</p>
-                
-                <!-- Customer Details -->
-                <h2 style="color: #799512; font-size: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Customer Information</h2>
-                <p><strong>Name:</strong> ${firstName} ${lastName}</p>
-                <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #799512;">${email}</a></p>
-                <p><strong>Phone:</strong> ${telephone}</p>
-                <p><strong>Company:</strong> ${companyName || 'N/A'}</p>
-                ${addressDetails}
-                
-                <!-- Project Details -->
-                <h2 style="color: #799512; font-size: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px;">Project Details</h2>
-                <p><strong>Location:</strong> ${projectLocation || 'N/A'}</p>
-                <p><strong>Owner Detail:</strong> ${projectOwnerDetail || 'N/A'}</p>
-                <p><strong>Size:</strong> ${projectSize || 'N/A'}</p>
-                <p><strong>Start Time:</strong> ${projectStartTime || 'N/A'}</p>
-                <p><strong>Additional Info:</strong> ${additionalInfo ? 'Yes' : 'No'}</p>
-                <p><strong>Message:</strong> ${enquiryMessage || 'N/A'}</p>
-    
-                <!-- Order Summary -->
-                <h2 style="color: #799512; font-size: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px;">Ordered Products</h2>
-                ${cartItems.map((item, index) => `
-                  <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; padding: 15px;">
-                    <img src="cid:boardImage${index}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 5px; margin-right: 15px;">
-                    <div>
-                      <p style="margin: 0; font-size: 12px; color: #888;">${item.category}</p>
-                      <h3 style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #333;">${item.type}</h3>
-                      <p style="margin: 0; color: #666;">${item.name} - ${item.boardWidth}mm</p>
-                      <p style="margin: 10px 0 0; color: #799512; font-weight: bold;">FREE</p>
-                    </div>
-                  </div>
-                `).join('')}
-                <p style="font-size: 12px; color: #999; text-align: center; margin-top: 20px;">
-                  This email was generated automatically from the Living Outdoors website.
-                </p>
-              </td>
-            </tr>
-          </table>
-        </div>
-      `,
+      html: 
+      `<div style="font-family: 'F37 Ginger', Arial, sans-serif; background-color: #f7f8f9; padding: 20px;">
+      <style>
+        @font-face {
+          font-family: 'F37 Ginger';
+          src: url('https://res.cloudinary.com/ddtzxyzex/raw/upload/v1730800574/fonts/F37/F37-Ginger-Regular.ttf') format('truetype');
+          font-weight: normal;
+          font-style: normal;
+        }
+      </style>
+      <table style="max-width: 600px; margin: auto; background-color: #ffffff; border-radius: 8px; padding: 20px;">
+        <tr>
+          <td>
+            <!-- Logo and Header -->
+            <img src="cid:logo" alt="Living Outdoors" style="width: 300px; height: auto; margin-bottom: 20px;">
+            <h1 style="color: #414042; font-size: 24px; margin-bottom: 10px;">New Sample Order - Dispatch Required</h1>
+            <p style="margin: 0 0 15px;">Please find the details of the new sample order below. Ensure the items are dispatched promptly.</p>
+            
+            <!-- Customer Details -->
+            <h2 style="color: #799512; font-size: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Customer Information</h2>
+            <p><strong>Name:</strong> ${firstName} ${lastName}</p>
+            <p><strong>Email:</strong> <a href="mailto:${email}" style="color: #799512;">${email}</a></p>
+            <p><strong>Phone:</strong> ${telephone}</p>
+            <p><strong>Company:</strong> ${companyName || 'N/A'}</p>
+            ${addressDetails}
+            
+            <!-- Project Details -->
+            <h2 style="color: #799512; font-size: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px;">Project Details</h2>
+            <p><strong>Location:</strong> ${projectLocation || 'N/A'}</p>
+            <p><strong>Owner Detail:</strong> ${projectOwnerDetail || 'N/A'}</p>
+            <p><strong>Size:</strong> ${projectSize || 'N/A'}</p>
+            <p><strong>Start Time:</strong> ${projectStartTime || 'N/A'}</p>
+            <p><strong>Additional Info:</strong> ${additionalInfo ? 'Yes' : 'No'}</p>
+            <p><strong>Message:</strong> ${enquiryMessage || 'N/A'}</p>
+
+            <!-- Order Summary -->
+            <h2 style="color: #799512; font-size: 20px; border-bottom: 1px solid #ddd; padding-bottom: 5px; margin-top: 20px;">Ordered Products</h2>
+            ${cartItems.map((item, index) => `
+              <div style="display: flex; align-items: center; border: 1px solid #ddd; border-radius: 8px; margin-bottom: 15px; padding: 15px;">
+                <img src="cid:boardImage${index}" alt="${item.name}" style="width: 80px; height: 80px; object-fit: cover;  margin-right: 15px;">
+                <div>
+                  <p style="margin: 0; font-size: 12px; color: #888;">${item.category}</p>
+                  <h3 style="margin: 5px 0; font-size: 18px; font-weight: bold; color: #333;">${item.type}</h3>
+                  <p style="margin: 0; color: #666;">${item.name} - ${item.boardWidth}mm</p>
+                  <p style="margin: 10px 0 0; color: #799512; font-weight: bold;">FREE</p>
+                </div>
+              </div>
+            `).join('')}
+            <p style="font-size: 12px; color: #999; text-align: center; margin-top: 20px;">
+              This email was generated automatically from the Living Outdoors website.
+            </p>
+          </td>
+        </tr>
+      </table>
+    </div>
+  `,
       attachments: [
         {
-          filename: 'Living_Outdoors_Logo.png',
-          path: './Living_Outdoors_Logo.png',
+          filename: 'Millboard_Logo.png',
+          path: './Millboard_Logo.png',
           cid: 'logo',
         },
         ...cartItems.map((item, index) => ({
@@ -130,7 +131,7 @@ export const sendEmailForCheckout = asyncHandler(async (req, res, next) => {
     const userMailOptions = {
       from: process.env.EMAIL_USERNAME,
       to: email,
-      subject: "Thank you ${firstName}, for requesting Millboard sample via a Living Outdoors",
+      subject: `Thank you ${firstName}, for requesting Millboard sample via a Living Outdoors`,
       html: `
         <div style="width: 100%; background-color: #FCFBF7; padding: 20px; font-family: 'F37 Ginger', Arial, sans-serif;">
           <style>
@@ -164,7 +165,7 @@ export const sendEmailForCheckout = asyncHandler(async (req, res, next) => {
                   Our mission is to bring the beauty of exceptional outdoor spaces right to your doorstep. Your sample will give you the chance to experience the quality and craftsmanship of our decking and cladding collections firsthand.
                 </p>
                 <p style="line-height:175%; margin-bottom:10px">
-                  In the meantime, we invite you to explore <a href="https://thelivingoutdoors.com/our-showrooms" target="_blank">Our Showrooms</a> for creative ideas or browse our <a href="https://thelivingoutdoors.com/inspiration-and-ideas/ideas/gallery" target="_blank">Inspiration Gallery</a> to see how others have transformed their spaces. If you’re planning your own project, our <a href="https://thelivingoutdoors.com/how-to-guides" target="_blank">Installation Guides</a> provide helpful tips and guidance.
+                  In the meantime, we invite you to explore <a href="https://thelivingoutdoors.com/our-showrooms" target="_blank style="color: #799512; text-decoration: none;font-weight: bold;">Our Showrooms</a> for creative ideas or browse our <a href="https://thelivingoutdoors.com/inspiration-and-ideas/ideas/gallery" target="_blank" style="color: #799512; text-decoration: none;font-weight: bold;">Inspiration Gallery</a> to see how others have transformed their spaces. If you’re planning your own project, our <a href="https://thelivingoutdoors.com/how-to-guides" target="_blank" style="color: #799512; text-decoration: none;font-weight: bold;">Installation Guides</a> provide helpful tips and guidance.
                 </p>
                 <p style="line-height:175%; margin-bottom:10px">
                   At Living Outdoors, we believe in the power of quality materials to elevate your outdoor experience. We’re here to support you at every step, and we’re confident that once you feel our products, you’ll be ready to embrace the outdoors like never before.
@@ -172,9 +173,10 @@ export const sendEmailForCheckout = asyncHandler(async (req, res, next) => {
                 <p style="line-height:175%; margin-bottom:10px; font-weight:normal">
                   Enjoy your sample, and don’t hesitate to reach out with any questions.
                 </p>
-                <p style="line-height:175%; margin-bottom:10px; font-weight:bold">
+                <p style="line-height:175%; margin-bottom:10px; font-weight:bold  font-size:22px; color:#414045; ">
                   Warm Regards,<br>The Living Outdoors Team
                 </p>
+                <img src="cid:footer" alt="Living Outdoors Banner" style="width: 100%; height: auto; margin-top: 20px;">
               </td>
             </tr>
           </table>
@@ -182,8 +184,8 @@ export const sendEmailForCheckout = asyncHandler(async (req, res, next) => {
       `,
       attachments: [
         {
-          filename: 'Living_Outdoors_Logo.png',
-          path: './Living_Outdoors_Logo.png',
+          filename: 'Millboard_Logo.png',
+          path: './Millboard_Logo.png',
           cid: 'logo',
         },
         {
@@ -204,7 +206,7 @@ export const sendEmailForCheckout = asyncHandler(async (req, res, next) => {
 
     // console.log('Mail response:', mailResponse); // Log mail response
 
-    return res.status(201).json(new ApiResponse(201, mailResponse, 'Email sent successfully to user and admin'));
+    return res.status(201).json(new ApiResponse(201, {}, 'Email sent successfully to user and admin'));
 
   } catch (error) {
     console.error('Error while sending email:', error); // Log the error
@@ -244,7 +246,7 @@ export const sendEnquiryEmail = asyncHandler(async (req, res, next) => {
           </style>
           <h2 style="color: #2c3e50; border-bottom: 2px solid #799512; padding-bottom: 10px; font-family: 'F37 Ginger';">New Enquiry</h2>
           <p style="margin-bottom: 10px; font-family: 'F37 Ginger';"><strong>Customer Name:</strong> ${firstName} ${lastName}</p>
-          <p style="margin-bottom: 10px; font-family: 'F37 Ginger';"><strong>Email:</strong> <a href="mailto:${email}" style="color: #799512; text-decoration: none;">${email}</a></p>
+          <p style="margin-bottom: 10px; font-family: 'F37 Ginger';"><strong>Email:</strong> <a href="mailto:${email}" style="color: #799512; text-decoration: none;font-weight: bold;">${email}</a></p>
           <p style="margin-bottom: 10px; font-family: 'F37 Ginger';"><strong>Telephone:</strong> ${telephone}</p>
           <p style="margin-bottom: 10px; font-family: 'F37 Ginger';"><strong>Enquiry Message:</strong> ${enquiryMessage}</p>
           <p style="margin-bottom: 10px; font-family: 'F37 Ginger';"><strong>Opt-in for updates:</strong> ${optIn ? 'Yes' : 'No'}</p>
@@ -272,7 +274,7 @@ export const sendEnquiryEmail = asyncHandler(async (req, res, next) => {
                 <p style="font-family: 'F37 Ginger';"><strong>Living Outdoors,</strong><br>
                   61 Caversham Road,<br>
                   Kentish Town, NW5 2DH<br>
-                  <strong>Phone:</strong> <a href="tel:+4402074824661,12" style="text-decoration: none; color: black; font-weight: bold;">020 7482 4661</a>
+                  <strong>Phone:</strong> <a href="tel:+4402074824661,12" style="color: #799512; text-decoration: none;font-weight: bold;">020 7482 4661</a>
                 </p>
                 <h3 style="color: #2c3e50; margin-top: 20px; font-family: 'F37 Ginger';">Enquiry Details</h3>
                 <ul style="list-style: none; padding: 0; margin: 0; font-family: 'F37 Ginger';">
@@ -289,7 +291,7 @@ export const sendEnquiryEmail = asyncHandler(async (req, res, next) => {
                   <li><a href="https://www.millboard.com/en-gb/case-studies" style="text-decoration: none; color: #799512; font-weight: bold;">Case Studies</a></li>
                 </ul>
                 <p style="color: #2c3e50; font-size: 14px; margin-top: 20px; font-family: 'F37 Ginger';"><strong>Living Outdoors Team</strong><br>
-                  Website: <a href="https://thelivingoutdoors.com" style="text-decoration: none; color: black; font-weight: bold;">www.thelivingoutdoors.com</a>
+                  Website: <a href="https://thelivingoutdoors.com" style="color: #799512; text-decoration: none;font-weight: bold;">www.thelivingoutdoors.com</a>
                 </p>
                 <img src="cid:footer" alt="Living Outdoors Banner" style="width: 100%; height: auto; margin-top: 20px;">
                 <div style="margin-top: 20px; font-size: 12px; color: #999; font-family: 'F37 Ginger';">
